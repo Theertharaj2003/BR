@@ -1,27 +1,31 @@
-import React, { Suspense } from "react";
+import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { LayoutSidebar } from "./LayoutSidebar";
 import { LayoutTopbar } from "./LayoutTopbar";
-import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { BottomNav } from "./BottomNav";
+import { useMediaQuery } from "../../hooks/useMediaQuery";
 
 export const AppShell: React.FC = () => {
-  const isMobile = useMediaQuery("(max-width: 1024px)");
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   return (
-    <div className="flex h-screen w-full flex-col bg-neutral-50 dark:bg-neutral-900">
-      <LayoutTopbar />
-      <div className="flex flex-1 overflow-hidden">
-        <LayoutSidebar />
-        <main className="flex-1 overflow-y-auto bg-neutral-50 px-6 py-6 dark:bg-neutral-900 lg:px-10">
-          <div className="mx-auto max-w-[1400px]">
-            <Suspense fallback={<div className="text-neutral-500">Loading...</div>}>
-              <Outlet />
-            </Suspense>
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+      <LayoutTopbar onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
+      
+      <div className="flex pt-16">
+        {!isMobile && (
+          <LayoutSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        )}
+        
+        <main className={`flex-1 transition-all duration-300 ${!isMobile && sidebarOpen ? 'ml-64' : 'ml-0'} pb-20 md:pb-0`}>
+          <div className="p-4 md:p-6 lg:p-8">
+            <Outlet />
           </div>
         </main>
       </div>
-      {isMobile ? <BottomNav /> : null}
+
+      {isMobile && <BottomNav />}
     </div>
   );
 };

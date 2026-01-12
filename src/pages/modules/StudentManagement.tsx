@@ -39,14 +39,15 @@ export const StudentManagement: React.FC = () => (
 
     <div className="grid gap-6 lg:grid-cols-2">
       <div>
-        <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">Admission wizard</h3>
+        <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-4">Admission wizard</h3>
         <Stepper
           steps={[
-            { title: "Profile", description: "Parent & student details", status: "complete" },
-            { title: "Academics", description: "Previous records", status: "current" },
-            { title: "Fees", description: "Structure & discounts", status: "upcoming" },
-            { title: "Documents", description: "Upload & verify", status: "upcoming" },
+            { label: "Profile", description: "Parent & student details" },
+            { label: "Academics", description: "Previous records" },
+            { label: "Fees", description: "Structure & discounts" },
+            { label: "Documents", description: "Upload & verify" },
           ]}
+          currentStep={1}
         />
       </div>
       <div>

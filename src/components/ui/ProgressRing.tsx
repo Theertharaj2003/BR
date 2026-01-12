@@ -2,58 +2,62 @@ import React from "react";
 
 interface ProgressRingProps {
   value: number;
+  max?: number;
   size?: number;
   strokeWidth?: number;
   label?: string;
-  trackColor?: string;
-  progressColor?: string;
+  color?: string;
 }
 
 export const ProgressRing: React.FC<ProgressRingProps> = ({
   value,
+  max = 100,
   size = 120,
-  strokeWidth = 10,
+  strokeWidth = 8,
   label,
-  trackColor = "stroke-neutral-200",
-  progressColor = "stroke-primary-500",
+  color = "text-primary-600",
 }) => {
-  const normalizedRadius = (size - strokeWidth) / 2;
-  const circumference = normalizedRadius * 2 * Math.PI;
-  const strokeDashoffset = circumference - (value / 100) * circumference;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const progress = Math.min(value / max, 1);
+  const offset = circumference - progress * circumference;
 
   return (
-    <figure className="flex flex-col items-center gap-2">
-      <svg height={size} width={size} role="img" aria-valuemin={0} aria-valuemax={100} aria-valuenow={value}>
+    <div
+      className="relative inline-flex items-center justify-center"
+      role="progressbar"
+      aria-label={label || `Progress: ${value} of ${max}`}
+    >
+      <svg width={size} height={size} className="transform -rotate-90">
         <circle
-          strokeWidth={strokeWidth}
-          fill="transparent"
-          r={normalizedRadius}
           cx={size / 2}
           cy={size / 2}
-          className={trackColor}
+          r={radius}
+          stroke="currentColor"
+          strokeWidth={strokeWidth}
+          fill="none"
+          className="text-neutral-200 dark:text-neutral-700"
         />
         <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke="currentColor"
           strokeWidth={strokeWidth}
+          fill="none"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
           strokeLinecap="round"
-          fill="transparent"
-          r={normalizedRadius}
-          cx={size / 2}
-          cy={size / 2}
-          className={`${progressColor} transition-[stroke-dashoffset] duration-700 ease-out-soft`}
-          strokeDasharray={`${circumference} ${circumference}`}
-          strokeDashoffset={strokeDashoffset}
+          className={color}
+          style={{ transition: "stroke-dashoffset 0.5s ease" }}
         />
-        <text
-          x="50%"
-          y="50%"
-          dominantBaseline="middle"
-          textAnchor="middle"
-          className="fill-neutral-900 text-xl font-semibold dark:fill-neutral-50"
-        >
-          {value}%
-        </text>
       </svg>
-      {label ? <figcaption className="text-sm text-neutral-500 dark:text-neutral-300">{label}</figcaption> : null}
-    </figure>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
+          {Math.round(progress * 100)}%
+        </span>
+        {label && <span className="text-xs text-neutral-500 dark:text-neutral-400">{label}</span>}
+      </div>
+    </div>
   );
 };

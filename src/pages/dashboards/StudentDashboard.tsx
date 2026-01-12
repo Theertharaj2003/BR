@@ -17,7 +17,7 @@ export const StudentDashboard: React.FC = () => (
     <AlertBanner
       variant="success"
       title="Exam prep boost"
-      description="You’re 82% ready for the Physics exam. Review flashcards to reach 90%."
+      description="You're 82% ready for the Physics exam. Review flashcards to reach 90%."
       action={<button className="rounded-full bg-primary-600 px-4 py-2 text-xs font-semibold text-white">Review now</button>}
     />
 
@@ -26,8 +26,8 @@ export const StudentDashboard: React.FC = () => (
         <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">Progress overview</h3>
         <div className="mt-6 flex flex-wrap items-center justify-around gap-6">
           <ProgressRing value={85} label="Overall" />
-          <ProgressRing value={92} label="Assignments" progressColor="stroke-secondary-500" />
-          <ProgressRing value={78} label="Exams" progressColor="stroke-accent-500" />
+          <ProgressRing value={92} label="Assignments" color="text-secondary-500" />
+          <ProgressRing value={78} label="Exams" color="text-accent-500" />
         </div>
       </div>
       <Timeline

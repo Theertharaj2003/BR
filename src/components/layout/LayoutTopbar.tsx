@@ -2,7 +2,11 @@ import React from "react";
 import { useThemeMode } from "../../theme/ThemeProvider";
 import { useRole } from "../../hooks/useRole";
 
-export const LayoutTopbar: React.FC = () => {
+interface LayoutTopbarProps {
+  onMenuClick?: () => void;
+}
+
+export const LayoutTopbar: React.FC<LayoutTopbarProps> = ({ onMenuClick }) => {
   const { mode, toggleMode } = useThemeMode();
   const { role, setRole } = useRole();
 
@@ -10,6 +14,16 @@ export const LayoutTopbar: React.FC = () => {
     <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white/80 backdrop-blur dark:border-neutral-800 dark:bg-neutral-900/80">
       <div className="mx-auto flex h-16 max-w-[1400px] items-center gap-4 px-4">
         <div className="flex flex-1 items-center gap-3">
+          {onMenuClick && (
+            <button
+              type="button"
+              onClick={onMenuClick}
+              className="md:hidden rounded-lg border border-neutral-200 bg-white/70 p-2 text-neutral-600 shadow-sm transition hover:text-primary-600 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-200"
+              aria-label="Toggle menu"
+            >
+              ☰
+            </button>
+          )}
           <div className="hidden sm:block">
             <p className="text-sm font-semibold text-neutral-700 dark:text-neutral-100">{role.replace("-", " ").toUpperCase()}</p>
             <p className="text-xs text-neutral-500 dark:text-neutral-400">Multi-tenant control center</p>
