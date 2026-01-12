@@ -1,0 +1,12 @@
+export { SuperAdminDashboard } from "./dashboards/SuperAdminDashboard";
+export { SchoolAdminDashboard } from "./dashboards/SchoolAdminDashboard";
+export { TeacherDashboard } from "./dashboards/TeacherDashboard";
+export { StudentDashboard } from "./dashboards/StudentDashboard";
+export { ParentDashboard } from "./dashboards/ParentDashboard";
+export { StudentManagement } from "./modules/StudentManagement";
+export { AttendanceModule } from "./modules/AttendanceModule";
+export { FeesAccounting } from "./modules/FeesAccounting";
+export { ExamsResults } from "./modules/ExamsResults";
+export { TimetableModule } from "./modules/TimetableModule";
+export { CommunicationModule } from "./modules/CommunicationModule";
+export { AIModules } from "./modules/AIModules";
