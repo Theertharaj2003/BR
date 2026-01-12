@@ -12,18 +12,21 @@ interface Column<T> {
 }
 
 interface DataTableProps<T extends Record<string, unknown>> {
-  data: T[];
+  data?: T[];
   columns: Column<T>[];
   caption?: string;
+  rows?: any[];
 }
 
-export const DataTable = <T extends Record<string, unknown>>({ data, columns, caption }: DataTableProps<T>) => {
+export const DataTable = <T extends Record<string, unknown>>({ data, columns, caption, rows }: DataTableProps<T>) => {
+  // Support both data and rows props for backward compatibility
+  const tableData = (data || rows || []) as T[];
   const [sortKey, setSortKey] = useState<keyof T | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
 
   const sortedData = useMemo(() => {
-    if (!sortKey || !sortDirection) return data;
-    return [...data].sort((a, b) => {
+    if (!sortKey || !sortDirection) return tableData;
+    return [...tableData].sort((a, b) => {
       const aValue = a[sortKey];
       const bValue = b[sortKey];
       if (aValue === bValue) return 0;
@@ -32,7 +35,7 @@ export const DataTable = <T extends Record<string, unknown>>({ data, columns, ca
       }
       return aValue > bValue ? -1 : 1;
     });
-  }, [data, sortDirection, sortKey]);
+  }, [tableData, sortDirection, sortKey]);
 
   const handleSort = (key: keyof T) => {
     if (sortKey === key) {
@@ -71,7 +74,7 @@ export const DataTable = <T extends Record<string, unknown>>({ data, columns, ca
                       onClick={() => handleSort(column.key)}
                       className="inline-flex items-center gap-1 rounded-lg px-2 py-1 transition hover:bg-primary-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500"
                     >
-                      {column.header}
+                      {(column as any).header || (column as any).label || String(column.key)}
                       <span aria-hidden>
                         {direction === "asc" ? "▲" : direction === "desc" ? "▼" : ""}
                       </span>
@@ -80,7 +83,7 @@ export const DataTable = <T extends Record<string, unknown>>({ data, columns, ca
                       </span>
                     </button>
                   ) : (
-                    column.header
+                    (column as any).header || (column as any).label || String(column.key)
                   )}
                 </th>
               );

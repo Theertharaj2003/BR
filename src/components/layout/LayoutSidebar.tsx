@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { useRole } from "../../hooks/useRole";
+import { useAuth } from "../../contexts/AuthContext";
 import { mockRoleNav } from "../../data/mockData";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 
@@ -10,8 +10,10 @@ interface LayoutSidebarProps {
 }
 
 export const LayoutSidebar: React.FC<LayoutSidebarProps> = ({ isOpen, onClose }) => {
-  const { role } = useRole();
+  const { user } = useAuth();
   const isMobile = useMediaQuery("(max-width: 1024px)");
+  
+  if (!user) return null;
 
   if (!isOpen) return null;
 
@@ -25,7 +27,7 @@ export const LayoutSidebar: React.FC<LayoutSidebarProps> = ({ isOpen, onClose })
         <p className="text-sm text-neutral-500">Intelligent school operations platform</p>
       </div>
       <nav role="navigation" className="space-y-1 flex-1 overflow-y-auto">
-        {mockRoleNav[role].map(item => (
+        {mockRoleNav[user.role].map(item => (
           <NavLink
             key={item.path}
             to={item.path}

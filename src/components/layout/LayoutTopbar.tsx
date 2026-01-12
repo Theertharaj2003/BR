@@ -1,6 +1,6 @@
 import React from "react";
 import { useThemeMode } from "../../theme/ThemeProvider";
-import { useRole } from "../../hooks/useRole";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface LayoutTopbarProps {
   onMenuClick?: () => void;
@@ -8,7 +8,7 @@ interface LayoutTopbarProps {
 
 export const LayoutTopbar: React.FC<LayoutTopbarProps> = ({ onMenuClick }) => {
   const { mode, toggleMode } = useThemeMode();
-  const { role, setRole } = useRole();
+  const { user, logout } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white/80 backdrop-blur dark:border-neutral-800 dark:bg-neutral-900/80">
@@ -25,7 +25,7 @@ export const LayoutTopbar: React.FC<LayoutTopbarProps> = ({ onMenuClick }) => {
             </button>
           )}
           <div className="hidden sm:block">
-            <p className="text-sm font-semibold text-neutral-700 dark:text-neutral-100">{role.replace("-", " ").toUpperCase()}</p>
+            <p className="text-sm font-semibold text-neutral-700 dark:text-neutral-100">{user?.role.replace("-", " ").toUpperCase()}</p>
             <p className="text-xs text-neutral-500 dark:text-neutral-400">Multi-tenant control center</p>
           </div>
           <label className="relative flex flex-1 items-center">
@@ -38,18 +38,10 @@ export const LayoutTopbar: React.FC<LayoutTopbarProps> = ({ onMenuClick }) => {
           </label>
         </div>
         <div className="flex items-center gap-3">
-          <select
-            aria-label="Switch role"
-            value={role}
-            onChange={event => setRole(event.target.value as typeof role)}
-            className="hidden rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm font-medium text-neutral-700 shadow-sm dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-200 lg:block"
-          >
-            <option value="super-admin">Super Admin</option>
-            <option value="school-admin">School Admin</option>
-            <option value="teacher">Teacher</option>
-            <option value="student">Student</option>
-            <option value="parent">Parent</option>
-          </select>
+          <div className="hidden lg:block">
+            <p className="text-sm font-semibold text-neutral-700 dark:text-neutral-100">{user?.name}</p>
+            <p className="text-xs text-neutral-500 dark:text-neutral-400">{user?.email}</p>
+          </div>
           <button
             type="button"
             onClick={toggleMode}
@@ -68,16 +60,11 @@ export const LayoutTopbar: React.FC<LayoutTopbarProps> = ({ onMenuClick }) => {
           </button>
           <button
             type="button"
-            className="flex items-center gap-2 rounded-full border border-neutral-200 bg-white/70 px-3 py-1.5 text-sm font-semibold text-neutral-700 shadow-sm transition hover:text-primary-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-200"
-            aria-label="Open profile menu"
+            onClick={logout}
+            className="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-700 shadow-sm transition hover:bg-red-100 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30"
+            aria-label="Logout"
           >
-            <span className="h-8 w-8 rounded-full bg-primary-500/90 text-white" aria-hidden>
-              <span className="flex h-full w-full items-center justify-center">NA</span>
-            </span>
-            <span className="hidden sm:flex flex-col items-start leading-tight">
-              <span>Neha Arora</span>
-              <span className="text-xs font-normal text-neutral-500 dark:text-neutral-400">Nimblix One</span>
-            </span>
+            Logout
           </button>
         </div>
       </div>
